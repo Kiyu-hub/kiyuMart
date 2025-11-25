@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Font families - Modern, clean typography */
+    --font-sans: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-serif: 'Playfair Display', 'Lora', Georgia, serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
+    
+    /* Light Mode - Neutral, Professional Colors */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 9%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --card-border: 0 0% 90%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+    --popover-border: 0 0% 90%;
+    
+    --primary: 16 100% 61%;
+    --primary-foreground: 0 0% 100%;
+    --primary-border: 16 100% 61%;
+    
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+    --secondary-border: 0 0% 90%;
+    
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --muted-border: 0 0% 90%;
+    
+    --accent: 16 100% 61%;
+    --accent-foreground: 0 0% 100%;
+    --accent-border: 16 100% 61%;
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-border: 0 84.2% 60.2%;
+    
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 16 100% 61%;
+    
+    --radius: 0.5rem;
+    
+    --chart-1: 16 100% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    
+    --sidebar: 0 0% 98%;
+    --sidebar-foreground: 0 0% 9%;
+    --sidebar-primary: 16 100% 61%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-primary-border: 16 100% 61%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 9%;
+    --sidebar-accent-border: 0 0% 90%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 16 100% 61%;
+  }
+ 
+  .dark {
+    /* Font families - Same for dark mode */
+    --font-sans: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-serif: 'Playfair Display', 'Lora', Georgia, serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
+    
+    /* Dark Mode Colors - Exact Match to Dashboard Screenshot */
+    --background: 220 13% 9%; /* #14171A - Very dark background */
+    --foreground: 0 0% 100%; /* #FFFFFF - Pure white text */
+    
+    --card: 218 18% 12%; /* #1A1F25 - Dark card background */
+    --card-foreground: 0 0% 100%; /* #FFFFFF */
+    --card-border: 220 13% 18%; /* #252A30 - Subtle card border */
+    
+    --popover: 218 18% 12%; /* #1A1F25 */
+    --popover-foreground: 0 0% 100%;
+    --popover-border: 220 13% 18%;
+    
+    --primary: 158 64% 52%; /* #10B981 - Emerald green for active states */
+    --primary-foreground: 0 0% 100%;
+    --primary-border: 158 64% 52%;
+    
+    --secondary: 217 19% 27%; /* #38404A - Dark gray for secondary elements */
+    --secondary-foreground: 0 0% 100%;
+    --secondary-border: 220 13% 18%;
+    
+    --muted: 217 19% 27%; /* #38404A - Muted backgrounds */
+    --muted-foreground: 220 9% 64%; /* #9CA3AF - Gray text */
+    --muted-border: 220 13% 18%;
+    
+    --accent: 158 64% 52%; /* #10B981 - Green accent */
+    --accent-foreground: 0 0% 100%;
+    --accent-border: 158 64% 52%;
+    
+    --destructive: 0 72% 51%; /* #EF4444 - Red for errors/negative */
+    --destructive-foreground: 0 0% 100%;
+    --destructive-border: 0 72% 51%;
+    
+    --border: 220 13% 18%; /* #252A30 - Subtle borders */
+    --input: 220 13% 18%;
+    --ring: 158 64% 52%;
+    
+    --chart-1: 158 64% 52%; /* #10B981 - Green */
+    --chart-2: 45 93% 47%; /* #F59E0B - Amber */
+    --chart-3: 0 72% 51%; /* #EF4444 - Red */
+    --chart-4: 217 19% 27%; /* #38404A */
+    --chart-5: 218 18% 12%; /* #1A1F25 */
+    
+    --sidebar: 220 13% 9%; /* #14171A - Same as background */
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 158 64% 52%; /* #10B981 - Active green */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-primary-border: 158 64% 52%;
+    --sidebar-accent: 217 19% 27%; /* #38404A */
+    --sidebar-accent-foreground: 220 9% 64%; /* #9CA3AF */
+    --sidebar-accent-border: 220 13% 18%;
+    --sidebar-border: 220 13% 18%; /* #252A30 */
+    --sidebar-ring: 158 64% 52%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
