@@ -114,6 +114,18 @@ PAYSTACK_SECRET_KEY = (leave blank for now)
 1. Add an `engines` field in `package.json` to lock the Node.js runtime used by DigitalOcean during build and runtime, for example:
 ```json
 "engines": { "node": ">=18 <=22" }
+
+### Pre-deploy: GitHub Secrets (required for CI/CD deployments)
+
+To allow GitHub Actions to deploy and run smoke tests, add the following repository secrets in GitHub:
+
+1. `DIGITALOCEAN_ACCESS_TOKEN` (write scope to manage apps)
+2. `DIGITALOCEAN_APP_ID` (optional; if present, CI will update the existing app rather than creating a new one)
+3. `DATABASE_URL` (Postgres connection string)
+4. `SESSION_SECRET` (secure random 32+ char hex string)
+5. `JWT_SECRET` (secure random 32+ char hex string)
+
+You can add these in GitHub: Settings → Secrets and variables → Actions → New repository secret.
 ```
 
 ---

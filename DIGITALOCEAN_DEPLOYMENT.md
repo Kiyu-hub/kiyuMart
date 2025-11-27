@@ -427,6 +427,19 @@ Check DATABASE_URL:
 8. ✅ Test end-to-end workflows
 9. ✅ Set up custom domain (optional)
 10. ✅ Monitor logs and metrics
+### Run migration & seeding jobs via App Platform
+
+If you've set up `jobs` in `app.yaml`, you can execute DB migrations and seeding using DigitalOcean App Platform's job components. Jobs are typically executed during a deployment, or you can run them manually from the App UI.
+
+Trigger a deployment (jobs will run as part of the deployment):
+```bash
+doctl apps create-deployment "$APP_ID" --force-build
+```
+
+If you prefer to run a single job manually via the DO dashboard, go to the App → Jobs, then pick the job (for example `migrate` or `seed`) and run it.
+
+Pro tip: If you don't want to run migrations automatically during every code push, set `job` components and run them manually as part of a release process.
+
 
 ---
 

@@ -27,6 +27,21 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
+      - name: Pre-deploy secret check
+        run: |
+          set -e
+          REQUIRED_SECRETS=("DIGITALOCEAN_ACCESS_TOKEN" "DATABASE_URL" "SESSION_SECRET" "JWT_SECRET")
+          MISSING=()
+          for s in "${REQUIRED_SECRETS[@]}"; do
+            if [ -z "${{ secrets[$s] }}" ]; then
+              MISSING+=("$s")
+            fi
+          done
+          if [ ${#MISSING[@]} -ne 0 ]; then
+            echo "Missing required secrets: ${MISSING[*]}" >&2
+            exit 1
+          fi
+
       - name: Deploy to DigitalOcean App Platform
         run: |
           set -e
@@ -81,3 +96,12 @@ jobs:
           done
           echo "Health check failed after retries" >&2
           exit 1
+
+      - name: Optional: Run DB migrate job
+        if: ${{ success() && env.MIGRATE_AFTER_DEPLOY == 'true' }}
+        env:
+          APP_ID: ${{ env.APP_ID }}
+        run: |
+          set -e
+          echo "Triggering deployment to run migrate job"
+          doctl apps create-deployment "$APP_ID"
