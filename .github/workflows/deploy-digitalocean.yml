@@ -41,3 +41,43 @@ jobs:
       - name: Notify
         if: success()
         run: echo "Deployment finished successfully"
+
+      - name: Get App ID
+        if: success()
+        run: |
+          set -e
+          if [ -n "${{ secrets.DIGITALOCEAN_APP_ID }}" ]; then
+            echo "APP_ID=${{ secrets.DIGITALOCEAN_APP_ID }}" >> $GITHUB_ENV
+          else
+            # Try to find the app ID for this repo
+            APP_ID=$(doctl apps list --format ID,Spec.Source.Repo --no-header | awk '/Kiyu-hub\/kiyuMart/ {print $1; exit}')
+            if [ -z "$APP_ID" ]; then
+              echo "Unable to determine App ID" >&2
+              exit 1
+            fi
+            echo "APP_ID=$APP_ID" >> $GITHUB_ENV
+          fi
+
+      - name: Get App domain
+        if: success()
+        run: |
+          set -e
+          APP_DOMAIN=$(doctl apps describe "$APP_ID" --format DefaultIngress --no-header)
+          echo "APP_DOMAIN=$APP_DOMAIN" >> $GITHUB_ENV
+
+      - name: Smoke test /api/health
+        if: success()
+        run: |
+          set -e
+          echo "Testing health endpoint on https://$APP_DOMAIN/api/health"
+          for i in {1..10}; do
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://$APP_DOMAIN/api/health" || true)
+            echo "Attempt $i: status $HTTP_STATUS"
+            if [ "$HTTP_STATUS" = "200" ]; then
+              echo "Health check passed"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Health check failed after retries" >&2
+          exit 1
