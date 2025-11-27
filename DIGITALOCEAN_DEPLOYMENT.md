@@ -1,4 +1,19 @@
+## 📦 Setting Node.js Version
+
+To ensure compatibility with DigitalOcean, add an `engines` field in your `package.json` to lock the runtime Node version used by DigitalOcean:
+```json
+  "engines": { "node": ">=18 <=22" }
+```
+**Sample `app.yaml` (create in repo root):**
+```yaml
+name: kiyumart
+```
+  - NOTE: Docker config has been archived; the repo favors the Node.js buildpack. Re-enable Docker by renaming `Dockerfile.disabled` to `Dockerfile`.
 # DigitalOcean Deployment Guide - KiyuMart Platform
+
+Great question — the easiest path is to use DigitalOcean App Platform’s Node.js buildpack (no Docker). It’s simpler than managing Docker images and still supports CI/CD via GitHub Actions and app.yaml.
+
+Below is a concise comparison and the exact steps for the simplest approach.
 
 > **Complete guide to deploy KiyuMart (frontend + backend + database) on DigitalOcean App Platform using $200 GitHub Student Pack credits.**
 
@@ -41,17 +56,18 @@
    - Select **App Platform**
 
 2. **Connect GitHub Repository**
-   - Click **GitHub** to authenticate
    - Select your KiyuMart repository
    - Choose branch: `main`
    - Click **Next**
 
 3. **Configure Application**
-   - DigitalOcean will auto-detect `Dockerfile`
-   - Set the following:
-     - **Build Command**: `npm run build` (already in Dockerfile)
-     - **Run Command**: Already configured in Dockerfile
+   - DigitalOcean may auto-detect a `Dockerfile` if present. To keep the simpler Node.js buildpack (recommended), explicitly choose `Node.js` as the runtime in the UI.
+   - Set the following (if using Node.js buildpack):
+    - **Build Command**: `bash ./scripts/build.sh` (this installs devDependencies and runs the production build)
+     - **Run Command**: `npm start`
      - **HTTP Port**: `5000`
+    - **Note**: Ensure to set the Node.js version in `package.json` as mentioned above.
+   - If you *do* want to use Docker, keep `Dockerfile` in the repo and App Platform will use the Docker build — this path is more complex but can be useful if you need OS-level control and native libs.
 
 4. **Add Environment Variables**
    - Click **Edit** → **Environmental variables**
@@ -76,15 +92,15 @@
    ```
 
 5. **Generate Secure Secrets** (in your terminal):
-   ```bash
-   # Generate SESSION_SECRET
-   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-   
-   # Generate JWT_SECRET (different value)
-   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-   ```
-   - Copy each output and paste into DigitalOcean console
-
+  ```yaml
+  name: kiyumart
+  services:
+    - name: web
+      github:
+        repo: YOUR-GITHUB-USERNAME/kiyuMart
+        branch: main
+      build_command: bash ./scripts/build.sh
+      run_command: npm start
 6. **Add Managed Database**
    - In the App Platform config, click **+ Add a Database**
    - Choose **PostgreSQL** (latest version)
@@ -97,6 +113,8 @@
    - Click **Create App**
    - DigitalOcean builds and deploys (usually 5-10 minutes)
    - You'll get a live URL: `https://kiyumart-xxxxx.ondigitalocean.app`
+
+  **Note:** If you selected Node.js in App Platform but keep having `sharp` or other native module build failures, switch to Docker or try running a build with `libvips` available in the build environment. If you continue to see errors, prefer Docker or the Droplet route.
 
 ### Option B: Deploy via DigitalOcean CLI (Advanced)
 
@@ -131,8 +149,8 @@ services:
       - key: SESSION_SECRET
         scope: RUN_TIME
       - key: JWT_SECRET
-        scope: RUN_TIME
-
+      build_command: bash ./scripts/build.sh
+      run_command: npm start
 databases:
   - name: kiyumart-db
     engine: PG
@@ -150,6 +168,18 @@ databases:
    - In DigitalOcean dashboard: **Create** → **Databases**
    - Choose **PostgreSQL**
    - Region: Select closest to your users
+
+  ### GitHub Actions Auto-Deploy (Optional)
+
+  You can automate deploys by adding a GitHub Action. A sample workflow `.github/workflows/deploy-digitalocean.yml` is included in this repo.
+
+  To configure it:
+  1. Go to your GitHub repo Settings → Secrets and variables → Actions → New repository secret.
+  2. Add `DIGITALOCEAN_ACCESS_TOKEN` with a DigitalOcean API token that has write scope.
+  3. (Optional) Add `DIGITALOCEAN_APP_ID` if you want GitHub Actions to update an existing App Platform app instead of creating a new one.
+  3. On push to `main`, the workflow will `npm ci`, `npm run build`, run tests, and deploy the app using `app.yaml`.
+
+  If you prefer use a different secret name, update the workflow accordingly.
    - Name: `kiyumart-db`
    - Version: 15+ (latest)
    - Cluster configuration: Starter ($15/month) or higher

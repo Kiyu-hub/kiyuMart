@@ -1,0 +1,25 @@
+[Unit]
+Description=KiyuMart Node.js application
+After=network.target
+
+[Service]
+# Make sure the user exists on your server
+User=kiyum
+Group=kiyum
+Environment=NODE_ENV=production
+Environment=PORT=5000
+# DATABASE_URL, SESSION_SECRET, JWT_SECRET should be set via environment or use a /etc/environment or file
+# Optionally, load environment variables from /etc/kiyumart/kiyumart.env using EnvironmentFile
+EnvironmentFile=/etc/kiyumart/kiyumart.env
+WorkingDirectory=/home/kiyum/kiyumart
+# Use start script which runs node dist/index.js
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=kiyumart
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target

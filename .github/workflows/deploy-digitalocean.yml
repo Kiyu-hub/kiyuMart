@@ -1,0 +1,43 @@
+name: Deploy to DigitalOcean App Platform
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Build (install dev deps and build)
+        run: make build-ci
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Setup doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Deploy to DigitalOcean App Platform
+        run: |
+          set -e
+          if [ -n "${{ secrets.DIGITALOCEAN_APP_ID }}" ]; then
+            echo "Updating existing App Platform app..."
+            doctl apps update "${{ secrets.DIGITALOCEAN_APP_ID }}" --spec app.yaml
+          else
+            echo "Creating new App Platform app..."
+            doctl apps create --spec app.yaml
+          fi
+
+      - name: Notify
+        if: success()
+        run: echo "Deployment finished successfully"

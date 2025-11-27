@@ -1,0 +1,33 @@
+name: kiyumart
+services:
+  - name: web
+    github:
+      repo: Kiyu-hub/kiyuMart
+      branch: main
+    # Run the build script which installs devDependencies and builds for production
+    build_command: bash ./scripts/build.sh
+    run_command: npm start
+    health_check:
+      protocol: http
+      path: /api/health
+      port: 5000
+    http_port: 5000
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "5000"
+      - key: DATABASE_URL
+        scope: RUN_TIME
+      - key: SESSION_SECRET
+        scope: RUN_TIME
+      - key: JWT_SECRET
+        scope: RUN_TIME
+    instance_count: 1
+    instance_size_slug: basic-xs
+
+databases:
+  - name: kiyumart-db
+    engine: PG
+    version: "15"
+    production: true

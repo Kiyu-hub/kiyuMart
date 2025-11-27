@@ -1,3 +1,22 @@
+# Quick DigitalOcean (App Platform) – Simple Node.js Buildpack
+
+Great question — the easiest path is to use DigitalOcean App Platform’s Node.js buildpack (no Docker). It’s simpler than managing Docker images and still supports CI/CD via GitHub Actions and app.yaml.
+
+If you want the simplest deployment path without Docker:
+1. Go to DigitalOcean → Create → App Platform.
+2. Connect your GitHub repo and select branch `main`.
+3. In **Choose repository** step, pick **Node.js** as the runtime (not Docker).
+4. Set **Build command**: `bash ./scripts/build.sh` or use `make build`.
+5. Set **Run command**: `npm start` and **HTTP Port**: `5000`.
+6. Add required environment variables (`DATABASE_URL`, `JWT_SECRET`, `SESSION_SECRET`, etc.).
+7. Add a Managed PostgreSQL database and attach it.
+8. Click **Create App** and monitor the build and logs.
+
+This approach uses the Node.js buildpack to keep deployment simple and minimal. If you encounter errors installing native modules like `sharp`, consider switching to Docker or the Droplet route instead.
+
+Note: Docker configuration has been archived in `Dockerfile.disabled` and the repo is set up to favor the Node.js buildpack by default. Re-enable Docker by renaming the archived file to `Dockerfile` if needed.
+
+Tip: Add an `engines` field in `package.json` to lock the Node version App Platform should use; we recommend `"node": ">=18 <=22"` to match our tested environments.
 # KiyuMart - Islamic Women's Fashion E-commerce Platform
 
 ![KiyuMart](https://via.placeholder.com/1200x300/16a34a/ffffff?text=KiyuMart+-+Islamic+Fashion+Marketplace)
