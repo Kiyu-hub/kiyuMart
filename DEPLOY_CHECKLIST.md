@@ -62,7 +62,7 @@ git push origin main
 ### 4A. Review Auto-Detected Settings
 
 DigitalOcean should show:
-- **Build Command**: (should auto-detect from Dockerfile or leave blank)
+- **Build Command**: `bash ./scripts/build.sh` (recommended, it installs devDependencies and runs the production build)
 - **Run Command**: (should auto-detect from Dockerfile)
 - **HTTP Port**: `5000`
 - **Source Directory**: `/` (root)
@@ -108,6 +108,12 @@ CLOUDINARY_API_KEY = (leave blank for now)
 CLOUDINARY_API_SECRET = (leave blank for now)
 PAYSTACK_PUBLIC_KEY = (leave blank for now)
 PAYSTACK_SECRET_KEY = (leave blank for now)
+```
+
+### Node Version (Optional but recommended)
+1. Add an `engines` field in `package.json` to lock the Node.js runtime used by DigitalOcean during build and runtime, for example:
+```json
+"engines": { "node": ">=18 <=22" }
 ```
 
 ---
