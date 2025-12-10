@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { Pool as NeonPool, neonConfig } from "@neondatabase/serverless";
-import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
+import { drizzle as drizzlePg, NodePgDatabase } from "drizzle-orm/node-postgres";
+import { NeonDatabase } from "drizzle-orm/neon-serverless";
 import { Pool as PgPool } from "pg";
 import * as schema from "../shared/schema";
 import ws from "ws";
@@ -9,7 +10,7 @@ import ws from "ws";
 const isLocalPostgres = process.env.DATABASE_URL?.includes('localhost') || 
                         process.env.DATABASE_URL?.includes('127.0.0.1');
 
-let db;
+let db: NodePgDatabase<typeof schema> | NeonDatabase<typeof schema>;
 
 if (isLocalPostgres) {
   // Local PostgreSQL using standard pg driver

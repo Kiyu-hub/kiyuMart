@@ -1,4 +1,0 @@
-# ARCHIVED: Full Dockerfile has been removed from repo root to prefer Node.js App Platform buildpack.
-# If you need to re-enable Docker for App Platform or Droplet builds, recreate this file with the
-# full multi-stage contents and rename it to `Dockerfile`.
-# This file remains in the repo for archival reference only and will not be used by the recommended simple Node.js buildpack flow.
