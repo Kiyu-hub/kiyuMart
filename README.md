@@ -236,7 +236,7 @@ To be a leading online destination for modest Islamic fashion, offering a divers
 - **Validation**: Zod with zod-validation-error
 
 ### Database
-- **Database**: PostgreSQL (Supabase or Neon Serverless supported)
+- **Database**: PostgreSQL (Supabase)
 - **ORM**: Drizzle ORM (type-safe SQL)
 - **Migrations**: Drizzle Kit
 - **Schema Validation**: Drizzle Zod
