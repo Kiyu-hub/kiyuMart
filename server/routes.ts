@@ -2700,23 +2700,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const pageSize = req.query.pageSize ? Math.min(parseInt(req.query.pageSize as string), 100) : 20;
       const offset = (page - 1) * pageSize;
       
-      let orders: any[];
+      let ordersResult: any[];
       let total = 0;
       
       if ((userRole === "admin" || userRole === "super_admin") && (context === "admin" || context === "super_admin")) {
+        // Admin sees all orders
         const countResult = await db.select({ count: sql<number>`count(*)::int` }).from(orders);
         total = countResult[0]?.count || 0;
-        orders = await db.select().from(orders).orderBy(desc(orders.createdAt)).limit(pageSize).offset(offset);
+        ordersResult = await db.select().from(orders).orderBy(desc(orders.createdAt)).limit(pageSize).offset(offset);
       } else {
         const filterRole = context as "buyer" | "seller" | "rider";
         const column = filterRole === "buyer" ? orders.buyerId : filterRole === "seller" ? orders.sellerId : orders.riderId;
-        const countResult = await db.select({ count: sql<number>`count(*)::int` }).from(orders).where(eq(column, req.user!.id));
-        total = countResult[0]?.count || 0;
-        orders = await db.select().from(orders).where(eq(column, req.user!.id)).orderBy(desc(orders.createdAt)).limit(pageSize).offset(offset);
+        
+        // CRITICAL FIX: Sellers and Riders only see PAID orders (payment completed)
+        // Buyers see all their orders (including unpaid)
+        if (filterRole === "seller" || filterRole === "rider") {
+          const countResult = await db.select({ count: sql<number>`count(*)::int` })
+            .from(orders)
+            .where(and(
+              eq(column, req.user!.id),
+              eq(orders.paymentStatus, "completed")
+            ));
+          total = countResult[0]?.count || 0;
+          
+          ordersResult = await db.select()
+            .from(orders)
+            .where(and(
+              eq(column, req.user!.id),
+              eq(orders.paymentStatus, "completed")
+            ))
+            .orderBy(desc(orders.createdAt))
+            .limit(pageSize)
+            .offset(offset);
+        } else {
+          // Buyers see all their orders (including unpaid/pending)
+          const countResult = await db.select({ count: sql<number>`count(*)::int` }).from(orders).where(eq(column, req.user!.id));
+          total = countResult[0]?.count || 0;
+          ordersResult = await db.select().from(orders).where(eq(column, req.user!.id)).orderBy(desc(orders.createdAt)).limit(pageSize).offset(offset);
+        }
       }
       
       const ordersWithItems = await Promise.all(
-        orders.map(async (order) => {
+        ordersResult.map(async (order) => {
           const items = await storage.getOrderItems(order.id);
           return { ...order, totalAmount: order.total, items };
         })
