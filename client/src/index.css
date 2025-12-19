@@ -71,58 +71,58 @@
     --font-serif: 'Playfair Display', 'Lora', Georgia, serif;
     --font-mono: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
     
-    /* Dark Mode Colors - Same theme as light mode with inverted backgrounds */
-    --background: 220 13% 9%; /* #14171A - Very dark background */
+    /* Dark Mode Colors - OLED-Friendly Deep Black Theme */
+    --background: 0 0% 6%; /* #0f0f0f - True OLED-friendly deep black */
     --foreground: 0 0% 100%; /* #FFFFFF - Pure white text */
     
-    --card: 218 18% 12%; /* #1A1F25 - Dark card background */
+    --card: 0 0% 10%; /* #1a1a1a - Slightly lighter dark cards */
     --card-foreground: 0 0% 100%; /* #FFFFFF */
-    --card-border: 220 13% 18%; /* #252A30 - Subtle card border */
+    --card-border: 0 0% 15%; /* #262626 - Subtle card border */
     
-    --popover: 218 18% 12%; /* #1A1F25 */
+    --popover: 0 0% 10%; /* #1a1a1a - Dark popover */
     --popover-foreground: 0 0% 100%;
-    --popover-border: 220 13% 18%;
+    --popover-border: 0 0% 15%;
     
-    --primary: 16 100% 61%; /* Same orange as light mode */
+    --primary: 16 100% 61%; /* #ff6b35 - Orange primary color */
     --primary-foreground: 0 0% 100%;
     --primary-border: 16 100% 61%;
     
-    --secondary: 217 19% 27%; /* #38404A - Dark gray for secondary elements */
+    --secondary: 0 0% 20%; /* #333333 - Neutral dark gray */
     --secondary-foreground: 0 0% 100%;
-    --secondary-border: 220 13% 18%;
+    --secondary-border: 0 0% 15%;
     
-    --muted: 217 19% 27%; /* #38404A - Muted backgrounds */
-    --muted-foreground: 220 9% 64%; /* #9CA3AF - Gray text */
-    --muted-border: 220 13% 18%;
+    --muted: 0 0% 20%; /* #333333 - Muted backgrounds */
+    --muted-foreground: 0 0% 60%; /* #999999 - Gray text */
+    --muted-border: 0 0% 15%;
     
-    --accent: 16 100% 61%; /* Same orange accent as light mode */
+    --accent: 16 100% 61%; /* #ff6b35 - Orange accent */
     --accent-foreground: 0 0% 100%;
     --accent-border: 16 100% 61%;
     
-    --destructive: 0 84.2% 60.2%; /* Same red as light mode */
+    --destructive: 0 84.2% 60.2%; /* Red for destructive actions */
     --destructive-foreground: 0 0% 100%;
     --destructive-border: 0 84.2% 60.2%;
     
-    --border: 220 13% 18%; /* #252A30 - Subtle borders */
-    --input: 220 13% 18%;
-    --ring: 16 100% 61%; /* Same orange ring as light mode */
+    --border: 0 0% 15%; /* #262626 - Neutral borders */
+    --input: 0 0% 15%;
+    --ring: 16 100% 61%; /* #ff6b35 - Orange focus ring */
     
-    --chart-1: 16 100% 61%; /* Same orange as light mode */
+    --chart-1: 16 100% 61%; /* #ff6b35 - Orange for charts */
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     
-    --sidebar: 220 13% 9%; /* #14171A - Same as background */
+    --sidebar: 0 0% 6%; /* #0f0f0f - Same as background */
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 16 100% 61%; /* Same orange as light mode */
+    --sidebar-primary: 16 100% 61%; /* #ff6b35 - Orange */
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-primary-border: 16 100% 61%;
-    --sidebar-accent: 217 19% 27%; /* #38404A */
-    --sidebar-accent-foreground: 220 9% 64%; /* #9CA3AF */
-    --sidebar-accent-border: 220 13% 18%;
-    --sidebar-border: 220 13% 18%; /* #252A30 */
-    --sidebar-ring: 16 100% 61%; /* Same orange ring as light mode */
+    --sidebar-accent: 0 0% 20%; /* #333333 - Neutral accent */
+    --sidebar-accent-foreground: 0 0% 60%; /* #999999 */
+    --sidebar-accent-border: 0 0% 15%;
+    --sidebar-border: 0 0% 15%; /* #262626 - Neutral border */
+    --sidebar-ring: 16 100% 61%; /* #ff6b35 - Orange ring */
   }
 }
 
