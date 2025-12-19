@@ -19,6 +19,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import MediaUploadInput from "@/components/MediaUploadInput";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { STORE_TYPES, STORE_TYPE_CONFIG, StoreType } from "@shared/storeTypes";
 
 interface SellerData {
   id: string;
@@ -31,6 +33,7 @@ interface SellerData {
   storeName: string | null;
   storeDescription: string | null;
   storeBanner: string | null;
+  storeType: string | null;
   profileImage: string | null;
   ghanaCardFront: string | null;
   ghanaCardBack: string | null;
@@ -44,6 +47,7 @@ const createSellerSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
   phone: z.string().optional(),
+  storeType: z.enum(STORE_TYPES, { required_error: "Please select a store type" }),
   storeName: z.string().min(2, "Store name must be at least 2 characters"),
   storeDescription: z.string().optional(),
   storeBanner: z.string().optional(),
@@ -65,6 +69,7 @@ type EditSellerFormData = z.infer<typeof editSellerSchema>;
 function CreateSellerDialog() {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
+  const [selectedStoreType, setSelectedStoreType] = useState<StoreType | null>(null);
 
   const form = useForm<CreateSellerFormData>({
     resolver: zodResolver(createSellerSchema),
@@ -73,6 +78,7 @@ function CreateSellerDialog() {
       email: "",
       password: "",
       phone: "",
+      storeType: undefined as any,
       storeName: "",
       storeDescription: "",
       storeBanner: "",
@@ -181,6 +187,40 @@ function CreateSellerDialog() {
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="storeType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Store Type / Category <span className="text-destructive">*</span></FormLabel>
+                  <Select 
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setSelectedStoreType(value as StoreType);
+                    }}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger data-testid="select-create-store-type">
+                        <SelectValue placeholder="Select store type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {STORE_TYPES.map((type) => (
+                        <SelectItem key={type} value={type} data-testid={`option-create-store-type-${type}`}>
+                          {STORE_TYPE_CONFIG[type].icon} {STORE_TYPE_CONFIG[type].label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedStoreType && STORE_TYPE_CONFIG[selectedStoreType].description}
+                  </p>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
@@ -441,9 +481,17 @@ function EditSellerDialog({ sellerData }: { sellerData: SellerData }) {
               name="storeBanner"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Store Banner URL</FormLabel>
+                  <FormLabel>Store Banner Image</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://..." {...field} data-testid="input-edit-store-banner" />
+                    <MediaUploadInput
+                      id="edit-store-banner"
+                      label=""
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      accept="image"
+                      placeholder="Upload or enter image URL..."
+                      description="Store banner image (optional)"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
