@@ -236,7 +236,7 @@ To be a leading online destination for modest Islamic fashion, offering a divers
 - **Validation**: Zod with zod-validation-error
 
 ### Database
-- **Database**: PostgreSQL (Neon Serverless)
+- **Database**: PostgreSQL (Supabase or Neon Serverless supported)
 - **ORM**: Drizzle ORM (type-safe SQL)
 - **Migrations**: Drizzle Kit
 - **Schema Validation**: Drizzle Zod
@@ -579,7 +579,33 @@ orders (1) ─── (N) delivery_tracking
 
 ## 🚀 Deployment
 
-### Replit Deployment (Recommended)
+### Production Deployment Stack (Recommended)
+
+KiyuMart is designed for deployment using:
+
+- **Frontend**: [Netlify](https://netlify.com) - React/Vite SPA with global CDN
+- **Backend**: [Render](https://render.com) - Node.js/Express API server
+- **Database**: [Supabase](https://supabase.com) - PostgreSQL database
+- **Media**: [Cloudinary](https://cloudinary.com) - Images and videos
+- **Payments**: [Paystack](https://paystack.com) - Payment processing
+
+#### Quick Start
+
+1. **Read the deployment guide**: See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions
+2. **Use the checklist**: Follow [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) step-by-step
+3. **Configure services**: 
+   - Create Supabase project → Get DATABASE_URL
+   - Create Cloudinary account → Get credentials
+   - Deploy backend to Render → Set environment variables
+   - Deploy frontend to Netlify → Configure API proxy
+
+#### Configuration Files
+
+- `netlify.toml` - Frontend deployment configuration
+- `render.yaml` - Backend deployment configuration  
+- `.env.example` - Environment variables template
+
+### Alternative: Replit Deployment
 
 1. **Configure Deployment**
    - Click "Deploy" button in Replit
@@ -594,7 +620,7 @@ orders (1) ─── (N) delivery_tracking
    - Replit handles SSL, CDN, and scaling automatically
    - Custom domain support available
 
-### Manual Deployment
+### Local Development Build
 
 #### Build for Production
 
@@ -605,33 +631,14 @@ npm run build
 #### Run Production Server
 
 ```bash
-NODE_ENV=production node server/index.js
+NODE_ENV=production node dist/index.js
 ```
 
 #### Environment Requirements
 
 - Node.js 18+
-- PostgreSQL database
-- Redis (optional, for sessions)
+- PostgreSQL database (local, Supabase, or Neon)
 - Port 5000 or PORT environment variable
-
-#### Reverse Proxy (Nginx)
-
-```nginx
-server {
-    listen 80;
-    server_name yourdomain.com;
-
-    location / {
-        proxy_pass http://localhost:5000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
 
 ---
 
@@ -640,13 +647,9 @@ server {
 ### Required
 
 ```env
-# Database (Replit provides these automatically)
-DATABASE_URL=postgresql://user:pass@host:port/db
-PGHOST=host
-PGPORT=5432
-PGDATABASE=dbname
-PGUSER=user
-PGPASSWORD=password
+# Database - Supabase PostgreSQL Connection
+# Get from: Supabase Dashboard → Settings → Database → Connection string (URI)
+DATABASE_URL=postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
 ```
 
 ### Optional (Can be configured via Admin Settings)
@@ -705,13 +708,22 @@ Upload custom logos via Admin Settings or replace:
 
 ### Test Accounts
 
-**Admin Account:**
-- Email: `admin@kiyumart.com`
-- Password: `admin123`
+Below are the dummy login credentials for testing all user roles. All accounts use the following pattern for easy testing:
 
-**Customer Account:**
-- Email: `customer@test.com`
-- Password: `password123`
+| Role | Email | Password | Dashboard Redirect |
+|------|-------|----------|-------------------|
+| **Super Admin** | `superadmin@kiyumart.com` | `superadmin123` | `/admin` |
+| **Admin** | `admin@kiyumart.com` | `admin123` | `/admin` |
+| **Seller** | `seller@kiyumart.com` | `seller123` | `/seller` |
+| **Rider** | `rider@kiyumart.com` | `rider123` | `/rider` |
+| **Agent** | `agent@kiyumart.com` | `agent123` | `/agent` |
+| **Buyer/Customer** | `buyer@kiyumart.com` | `buyer123` | `/buyer` |
+
+**Additional Test Accounts:**
+- Customers: `customer@test.com` / `password123`
+- Sellers: `seller1@kiyumart.com` to `seller10@kiyumart.com` / `password123`
+- Riders: `rider1@kiyumart.com` to `rider5@kiyumart.com` / `password123`
+- Buyers: `buyer1@kiyumart.com` to `buyer20@kiyumart.com` / `password123`
 
 ### Paystack Test Cards
 

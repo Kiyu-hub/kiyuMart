@@ -1,0 +1,75 @@
+# Render Configuration for KiyuMart Backend
+# This file defines the backend API server deployment on Render
+
+services:
+  # Backend API Server
+  - type: web
+    name: kiyumart-backend
+    env: node
+    region: oregon # Change to your preferred region
+    plan: starter # Change to 'free' or other plans as needed
+    
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm run start
+    
+    # Health check endpoint
+    healthCheckPath: /api/health
+    
+    # Auto-deploy from main branch
+    branch: main
+    
+    # Environment variables (set in Render dashboard for security)
+    envVars:
+      - key: NODE_ENV
+        value: production
+      
+      - key: PORT
+        value: 5000
+      
+      # Database - Add in Render dashboard from Supabase
+      - key: DATABASE_URL
+        sync: false # Set manually in dashboard
+      
+      # Cloudinary - Add in Render dashboard
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      
+      # Paystack - Add in Render dashboard
+      - key: PAYSTACK_SECRET_KEY
+        sync: false
+      
+      - key: PAYSTACK_PUBLIC_KEY
+        sync: false
+      
+      # Security secrets - Generate and add in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      
+      - key: SESSION_SECRET
+        generateValue: true
+      
+      # Admin credentials - Set in Render dashboard
+      - key: SUPER_ADMIN_EMAIL
+        sync: false
+      
+      - key: SUPER_ADMIN_PASSWORD
+        sync: false
+      
+      - key: ADMIN_EMAIL
+        sync: false
+      
+      - key: ADMIN_PASSWORD
+        sync: false
+
+# Deployment notes:
+# 1. Create a Supabase project and get your DATABASE_URL
+# 2. Create a Cloudinary account and get your credentials
+# 3. Set all environment variables in Render dashboard
+# 4. Update netlify.toml with your Render backend URL
+# 5. Deploy!

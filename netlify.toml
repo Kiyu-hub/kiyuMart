@@ -1,0 +1,82 @@
+# Netlify Configuration for KiyuMart Frontend
+
+[build]
+  # Build command for the Vite React app
+  command = "npm run build"
+  
+  # Directory to publish (Vite outputs to dist by default)
+  publish = "dist"
+  
+  # Base directory for the build
+  base = "/"
+
+[build.environment]
+  # Node version
+  NODE_VERSION = "18"
+  
+  # Build-time environment variables
+  # Note: Add sensitive env vars in Netlify dashboard, not here
+  NODE_ENV = "production"
+
+# Redirect rules for SPA (Single Page Application)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+  
+  # Don't redirect API calls - send them to your Render backend
+  conditions = {Role = ["*"]}
+
+# API proxy to backend on Render
+[[redirects]]
+  from = "/api/*"
+  to = "https://your-render-backend-url.onrender.com/api/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Cache static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache images
+[[headers]]
+  for = "*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    
+[[headers]]
+  for = "*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    
+[[headers]]
+  for = "*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Functions (if you add Netlify Functions later)
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Dev server settings
+[dev]
+  command = "npm run dev"
+  port = 5173
+  targetPort = 5173
+  framework = "#custom"
+  autoLaunch = false

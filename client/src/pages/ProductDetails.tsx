@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Heart, ShoppingCart, Star, ArrowLeft, Minus, Plus, X } from "lucide-react";
+import { Heart, ShoppingCart, Star, ArrowLeft, Minus, Plus, X, Share2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -642,6 +642,22 @@ export default function ProductDetails() {
                 >
                   <ShoppingCart className="h-5 w-5 mr-2" />
                   {availableStock === 0 ? "Out of Stock" : "Add to Cart"}
+                </Button>
+
+                {/* WhatsApp Share Button */}
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full"
+                  onClick={() => {
+                    const shareText = `Check out this product: ${product.name}\nPrice: ${formatPrice(sellingPrice)}\n${window.location.href}`;
+                    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+                    window.open(whatsappUrl, '_blank');
+                  }}
+                  data-testid="button-whatsapp-share"
+                >
+                  <Share2 className="h-5 w-5 mr-2" />
+                  Share on WhatsApp
                 </Button>
               </div>
             </div>

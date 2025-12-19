@@ -71,7 +71,7 @@
     --font-serif: 'Playfair Display', 'Lora', Georgia, serif;
     --font-mono: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
     
-    /* Dark Mode Colors - Exact Match to Dashboard Screenshot */
+    /* Dark Mode Colors - Same theme as light mode with inverted backgrounds */
     --background: 220 13% 9%; /* #14171A - Very dark background */
     --foreground: 0 0% 100%; /* #FFFFFF - Pure white text */
     
@@ -83,9 +83,9 @@
     --popover-foreground: 0 0% 100%;
     --popover-border: 220 13% 18%;
     
-    --primary: 158 64% 52%; /* #10B981 - Emerald green for active states */
+    --primary: 16 100% 61%; /* Same orange as light mode */
     --primary-foreground: 0 0% 100%;
-    --primary-border: 158 64% 52%;
+    --primary-border: 16 100% 61%;
     
     --secondary: 217 19% 27%; /* #38404A - Dark gray for secondary elements */
     --secondary-foreground: 0 0% 100%;
@@ -95,34 +95,34 @@
     --muted-foreground: 220 9% 64%; /* #9CA3AF - Gray text */
     --muted-border: 220 13% 18%;
     
-    --accent: 158 64% 52%; /* #10B981 - Green accent */
+    --accent: 16 100% 61%; /* Same orange accent as light mode */
     --accent-foreground: 0 0% 100%;
-    --accent-border: 158 64% 52%;
+    --accent-border: 16 100% 61%;
     
-    --destructive: 0 72% 51%; /* #EF4444 - Red for errors/negative */
+    --destructive: 0 84.2% 60.2%; /* Same red as light mode */
     --destructive-foreground: 0 0% 100%;
-    --destructive-border: 0 72% 51%;
+    --destructive-border: 0 84.2% 60.2%;
     
     --border: 220 13% 18%; /* #252A30 - Subtle borders */
     --input: 220 13% 18%;
-    --ring: 158 64% 52%;
+    --ring: 16 100% 61%; /* Same orange ring as light mode */
     
-    --chart-1: 158 64% 52%; /* #10B981 - Green */
-    --chart-2: 45 93% 47%; /* #F59E0B - Amber */
-    --chart-3: 0 72% 51%; /* #EF4444 - Red */
-    --chart-4: 217 19% 27%; /* #38404A */
-    --chart-5: 218 18% 12%; /* #1A1F25 */
+    --chart-1: 16 100% 61%; /* Same orange as light mode */
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
     
     --sidebar: 220 13% 9%; /* #14171A - Same as background */
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 158 64% 52%; /* #10B981 - Active green */
+    --sidebar-primary: 16 100% 61%; /* Same orange as light mode */
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-primary-border: 158 64% 52%;
+    --sidebar-primary-border: 16 100% 61%;
     --sidebar-accent: 217 19% 27%; /* #38404A */
     --sidebar-accent-foreground: 220 9% 64%; /* #9CA3AF */
     --sidebar-accent-border: 220 13% 18%;
     --sidebar-border: 220 13% 18%; /* #252A30 */
-    --sidebar-ring: 158 64% 52%;
+    --sidebar-ring: 16 100% 61%; /* Same orange ring as light mode */
   }
 }
 
@@ -145,5 +145,32 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+  
+  /* Consistent hover effects for both light and dark modes */
+  .hover-elevate {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  .hover-elevate:hover {
+    @apply shadow-md -translate-y-0.5;
+  }
+  
+  .active-elevate-2 {
+    @apply active:scale-[0.98] active:shadow-sm;
+  }
+  
+  /* Consistent button hover states */
+  .btn-primary-hover:hover {
+    @apply brightness-110;
+  }
+  
+  /* Consistent card borders in both modes */
+  .card-bordered {
+    @apply border border-card-border;
+  }
+  
+  /* Smooth theme transitions */
+  .theme-transition {
+    @apply transition-colors duration-200;
   }
 }
